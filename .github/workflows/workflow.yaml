@@ -21,6 +21,8 @@ jobs:
           sudo apt update && sudo apt install -qy openssh-server tmux
           echo "PasswordAuthentication no" | sudo tee -a /etc/ssh/sshd_config
           echo "ChallengeResponseAuthentication no" | sudo tee -a /etc/ssh/sshd_config
+          sudo sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
+
 
           mkdir -p ~/.ssh
           
