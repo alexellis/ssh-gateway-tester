@@ -23,14 +23,14 @@ jobs:
           echo "ChallengeResponseAuthentication no" | sudo tee -a /etc/ssh/sshd_config
           sudo sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
 
-
           mkdir -p ~/.ssh
           
           curl -s "https://api.github.com/users/$GITHUB_ACTOR/keys" | jq -r '.[].key' > ~/.ssh/authorized_keys
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
 
-          sudo systemctl enable ssh --now
+          sudo systemctl daemon-reload
+          sudo systemctl restart sshd --now
       - name: Setup motd message 
         run: |-
           cat << EOF | sudo tee /etc/motd
