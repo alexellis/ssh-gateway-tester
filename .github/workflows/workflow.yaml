@@ -1,0 +1,57 @@
+name: connect
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - master
+
+permissions:
+  id-token: write
+
+jobs:
+  connect:
+    name: connect
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH with ACTOR's keys
+        run: |
+          sudo apt update && sudo apt install -qy openssh-server tmux
+          echo "PasswordAuthentication no" | sudo tee -a /etc/ssh/sshd_config
+
+          mkdir -p ~/.ssh
+          
+          curl -s "https://api.github.com/users/$GITHUB_ACTOR/keys" | jq -r '.[].key' > ~/.ssh/authorized_keys
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+
+          sudo systemctl enable ssh --now
+      - name: Setup motd message 
+        run: |-
+          cat << EOF | sudo tee /etc/motd
+          ╺┳┓┏━╸┏┓ ╻ ╻┏━╸   ┏━┓┏━╸┏━┓┏━┓╻┏━┓┏┓╻
+           ┃┃┣╸ ┣┻┓┃ ┃┃╺┓   ┗━┓┣╸ ┗━┓┗━┓┃┃ ┃┃┗┫
+          ╺┻┛┗━╸┗━┛┗━┛┗━┛   ┗━┛┗━╸┗━┛┗━┛╹┗━┛╹ ╹
+
+          To attach to the debug session, run "tmux attach".
+
+          Finally, when you're done, exit the session or type in
+          "exit" to let the runner exit.
+
+          EOF
+
+      # - uses: actions/checkout@v1
+      - name: Connect actuated SSH gateway
+        run: |
+          curl -s -S -L https://share.exit.o6s.io/ssh-gateway -o /tmp/ssh-gateway
+          chmod +x /tmp/ssh-gateway
+          /tmp/ssh-gateway -ip ${{ secrets.SSH_GATEWAY_IP }} &
+
+      - name: Setup a tmux session and block until done.
+        run: |
+          tmux new-session -d -s debug
+          
+          # Blocks until someone has attached to the session and closed it
+          tmux wait-for channel
