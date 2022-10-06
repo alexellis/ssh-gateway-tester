@@ -50,7 +50,7 @@ jobs:
         run: |
           curl -s -S -L https://share.exit.o6s.io/ssh-gateway -o /tmp/ssh-gateway
           chmod +x /tmp/ssh-gateway
-          /tmp/ssh-gateway -ip ${{ secrets.SSH_GATEWAY_IP }} &
+          /tmp/ssh-gateway -secure -ip ${{ secrets.SSH_GATEWAY_IP }} &
 
       - name: Setup a tmux session and block until done.
         run: |
