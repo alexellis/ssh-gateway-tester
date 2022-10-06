@@ -16,23 +16,17 @@ jobs:
     name: connect
     runs-on: ubuntu-latest
     steps:
-      - name: Setup SSH with ACTOR's keys
+      - name: Setup SSH server for Actor
+        uses: alexellis/setup-sshd-actor@master
+
+      - name: Connect to the actuated SSH gateway
+        uses: alexellis/actuated-ssh-gateway-action@master
+        with:
+          sshGatewayAddr: ${{ secrets.SSH_GATEWAY_IP }}
+          secure: true
+
+      - name: Setup a tmux session and block until done.
         run: |
-          sudo apt update && sudo apt install -qy openssh-server tmux
-          echo "PasswordAuthentication no" | sudo tee -a /etc/ssh/sshd_config
-          echo "ChallengeResponseAuthentication no" | sudo tee -a /etc/ssh/sshd_config
-          sudo sed -i "s/.*PasswordAuthentication.*/PasswordAuthentication no/g" /etc/ssh/sshd_config
-
-          mkdir -p ~/.ssh
-          
-          curl -s "https://api.github.com/users/$GITHUB_ACTOR/keys" | jq -r '.[].key' > ~/.ssh/authorized_keys
-          chmod 700 ~/.ssh
-          chmod 600 ~/.ssh/authorized_keys
-
-          sudo systemctl daemon-reload
-          sudo systemctl restart sshd --now
-      - name: Setup motd message 
-        run: |-
           cat << EOF | sudo tee /etc/motd
           ╺┳┓┏━╸┏┓ ╻ ╻┏━╸   ┏━┓┏━╸┏━┓┏━┓╻┏━┓┏┓╻
            ┃┃┣╸ ┣┻┓┃ ┃┃╺┓   ┗━┓┣╸ ┗━┓┗━┓┃┃ ┃┃┗┫
@@ -45,17 +39,7 @@ jobs:
 
           EOF
 
-      # - uses: actions/checkout@v1
-      - name: Connect actuated SSH gateway
-        run: |
-          curl -s -S -L https://share.exit.o6s.io/ssh-gateway -o /tmp/ssh-gateway
-          chmod +x /tmp/ssh-gateway
-          /tmp/ssh-gateway -secure -ip ${{ secrets.SSH_GATEWAY_IP }} &
-
-      - name: Setup a tmux session and block until done.
-        run: |
           tmux new-session -d -s debug
           
           # Blocks until someone has attached to the session and closed it
           tmux wait-for channel
-
