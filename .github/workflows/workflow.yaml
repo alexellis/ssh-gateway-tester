@@ -29,4 +29,3 @@ jobs:
           secure: true
       - name: Setup a blocking tmux session
         uses: alexellis/block-with-tmux-action@master
-
