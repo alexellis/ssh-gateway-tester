@@ -22,7 +22,4 @@ jobs:
     steps:
       - uses: self-actuated/setup-sshd-for-actor@master
       - uses: self-actuated/connect-ssh-gateway@master
-        with:
-          gatewayaddr: ${{ secrets.SSH_GATEWAY_IP }}
-          secure: true
       - uses: self-actuated/block-with-tmux@master
