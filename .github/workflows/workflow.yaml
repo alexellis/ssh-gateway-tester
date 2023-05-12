@@ -20,12 +20,9 @@ jobs:
     name: connect
     runs-on: ubuntu-latest
     steps:
-      - name: Setup SSH server for Actor
-        uses: self-actuated/setup-sshd-for-actor@master
-      - name: Connect to the actuated SSH gateway
-        uses: self-actuated/connect-ssh-gateway@master
+      - uses: self-actuated/setup-sshd-for-actor@master
+      - uses: self-actuated/connect-ssh-gateway@master
         with:
           gatewayaddr: ${{ secrets.SSH_GATEWAY_IP }}
           secure: true
-      - name: Setup a blocking tmux session
-        uses: self-actuated/block-with-tmux@master
+      - uses: self-actuated/block-with-tmux@master
