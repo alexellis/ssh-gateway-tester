@@ -20,5 +20,5 @@ jobs:
     name: connect
     runs-on: ubuntu-latest
     steps:
-      - uses: self-actuated/ssh-action@master
+      - uses: self-actuated/connect-ssh@master
 
