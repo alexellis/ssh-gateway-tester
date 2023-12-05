@@ -13,4 +13,3 @@ Click the image to [watch a demo and see how it works](https://www.youtube.com/w
 You'll need to Tweet to me with your GitHub username and ask me to grant you access.
 
 Then I'll send you the instructions via Twitter DM.
-
