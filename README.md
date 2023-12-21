@@ -10,6 +10,4 @@ Click the image to [watch a demo and see how it works](https://www.youtube.com/w
 
 ## Looking for the instructions?
 
-You'll need to Tweet to me with your GitHub username and ask me to grant you access.
-
-Then I'll send you the instructions via Twitter DM.
+Access is available to my [GitHub Sponsors](https://gist.github.com/alexellis/d8f319a0f9f804ee327df727eef70cd0) free of charge.
